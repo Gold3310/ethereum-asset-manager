@@ -1,0 +1,45 @@
+{
+  "name": "ethereum-asset-manager",
+  "version": "1.0.0",
+  "description": "Comprehensive DeFi Asset Management System",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network sepolia",
+    "interact": "hardhat run scripts/interact.js --network sepolia",
+    "add-assets": "hardhat run scripts/add-assets.js --network sepolia",
+    "transfer": "hardhat run scripts/transfer.js --network sepolia",
+    "display": "hardhat run scripts/display-details.js --network sepolia",
+    "node": "hardhat node",
+    "gas-report": "REPORT_GAS=true hardhat test",
+    "coverage": "hardhat coverage"
+  },
+  "keywords": [
+    "ethereum",
+    "asset-management",
+    "defi",
+    "hardhat",
+    "smart-contracts"
+  ],
+  "author": "Gold3310",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "chai": "^4.3.7",
+    "ethers": "^6.7.1",
+    "hardhat": "^2.17.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "@uniswap/v3-core": "^1.0.1",
+    "bip39": "^3.0.4",
+    "crypto": "^1.0.3",
+    "dotenv": "^16.3.1",
+    "ethereumjs-wallet": "^1.0.2"
+  }
+}
