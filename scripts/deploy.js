@@ -2,19 +2,12 @@ const { ethers } = require('hardhat');
 
 async function main() {
   const deployerOwner = process.env.DEPLOYER_OWNER || process.env.CONTRACT_OWNER;
-  const owners = [
-    deployerOwner,
-    process.env.OWNER_1,
-    process.env.OWNER_2,
-  ].filter(Boolean);
 
   if (!deployerOwner) {
     throw new Error('Set DEPLOYER_OWNER or CONTRACT_OWNER in your .env before deploying.');
   }
 
-  if (owners.length < 1) {
-    throw new Error('No owner addresses were configured for deployment.');
-  }
+  const owners = [deployerOwner];
 
   const AssetManager = await ethers.getContractFactory('AssetManager');
   const assetManager = await AssetManager.deploy(owners);
