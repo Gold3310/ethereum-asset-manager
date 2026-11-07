@@ -3,6 +3,16 @@ require('dotenv').config();
 require('hardhat-gas-reporter');
 require('solidity-coverage');
 
+const mainnetRequested = process.argv.some(
+  (arg, index, args) => arg === '--network' && args[index + 1] === 'mainnet',
+) || process.env.HARDHAT_NETWORK === 'mainnet';
+if (mainnetRequested && process.env.ALLOW_MAINNET_DEPLOYMENT !== 'true') {
+  throw new Error('Mainnet execution is disabled. Set ALLOW_MAINNET_DEPLOYMENT=true only after completing deployment review.');
+}
+if (process.env.PRIVATE_KEY && !/^0x[0-9a-fA-F]{64}$/.test(process.env.PRIVATE_KEY)) {
+  throw new Error('PRIVATE_KEY must be a 32-byte hex key (0x + 64 hex characters). Never place it in a committed file.');
+}
+
 module.exports = {
   solidity: {
     version: '0.8.19',
