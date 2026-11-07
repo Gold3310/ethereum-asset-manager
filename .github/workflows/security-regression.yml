@@ -1,0 +1,38 @@
+name: AssetManager Security Regression Tests
+
+on:
+  push:
+    branches:
+      - security-fix/asset-accounting-2026-11-07
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "contracts/**"
+      - "test/**"
+      - "hardhat.config.js"
+      - "package.json"
+
+permissions:
+  contents: read
+
+jobs:
+  hardhat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run tests
+        run: npm test
