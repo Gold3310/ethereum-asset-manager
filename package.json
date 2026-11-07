@@ -13,7 +13,8 @@
     "display": "hardhat run scripts/display-details.js --network sepolia",
     "node": "hardhat node",
     "gas-report": "REPORT_GAS=true hardhat test",
-    "coverage": "hardhat coverage"
+    "coverage": "hardhat coverage",
+    "wallet:generate": "node scripts/generate-dev-wallet.js"
   },
   "keywords": [
     "ethereum",
