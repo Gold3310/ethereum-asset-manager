@@ -48,8 +48,10 @@ contract AssetManager is IAssetManager, Ownable, Pausable, ReentrancyGuard {
     mapping(bytes32 => bool) public assetExists;
     mapping(address => mapping(address => UserBalance)) public userBalances;
     mapping(address => address[]) public userAssets;
+    mapping(address => mapping(address => bool)) private userAssetListed;
 
     address[] public assetList;
+    mapping(address => bool) private assetListed;
     uint256 public totalAssetsCount;
     uint256 public minimumDepositAmount = 1e6; // 1 token with 6 decimals
 
@@ -85,7 +87,10 @@ contract AssetManager is IAssetManager, Ownable, Pausable, ReentrancyGuard {
         });
 
         assetExists[assetKey] = true;
-        assetList.push(tokenAddress);
+        if (!assetListed[tokenAddress]) {
+            assetList.push(tokenAddress);
+            assetListed[tokenAddress] = true;
+        }
         totalAssetsCount++;
 
         emit AssetAdded(tokenAddress, symbol, decimals);
@@ -97,6 +102,7 @@ contract AssetManager is IAssetManager, Ownable, Pausable, ReentrancyGuard {
      */
     function removeAsset(address tokenAddress) external onlyOwner {
         require(assets[tokenAddress].active, "Asset not found");
+        require(assets[tokenAddress].totalDeposited == 0, "Outstanding deposits");
 
         assets[tokenAddress].active = false;
         bytes32 assetKey = keccak256(abi.encodePacked(tokenAddress));
@@ -174,8 +180,9 @@ contract AssetManager is IAssetManager, Ownable, Pausable, ReentrancyGuard {
         );
 
         // Update user balance
-        if (userBalances[msg.sender][tokenAddress].amount == 0) {
+        if (!userAssetListed[msg.sender][tokenAddress]) {
             userAssets[msg.sender].push(tokenAddress);
+            userAssetListed[msg.sender][tokenAddress] = true;
         }
 
         userBalances[msg.sender][tokenAddress].amount += amount;
@@ -237,8 +244,9 @@ contract AssetManager is IAssetManager, Ownable, Pausable, ReentrancyGuard {
 
         userBalances[msg.sender][tokenAddress].amount -= amount;
         
-        if (userBalances[recipient][tokenAddress].amount == 0) {
+        if (!userAssetListed[recipient][tokenAddress]) {
             userAssets[recipient].push(tokenAddress);
+            userAssetListed[recipient][tokenAddress] = true;
         }
         
         userBalances[recipient][tokenAddress].amount += amount;
