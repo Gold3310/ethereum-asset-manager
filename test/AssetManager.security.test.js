@@ -36,7 +36,7 @@ describe("AssetManager security regressions", function () {
       .to.be.revertedWith("Outstanding deposits");
 
     expect(await manager.getBalance(user.address, tokenAddress)).to.equal(amount);
-    expect(await manager.getTotalDeposited(tokenAddress)).to.equal(amount);
+    expect(await manager.getAssetTotalDeposited(tokenAddress)).to.equal(amount);
 
     // The failed administrative removal must not prevent the user's withdrawal.
     await expect(manager.connect(user).withdraw(tokenAddress, amount)).not.to.be.reverted;
@@ -51,7 +51,7 @@ describe("AssetManager security regressions", function () {
     await expect(manager.addAsset(tokenAddress, "TUSD", 6)).not.to.be.reverted;
 
     await manager.connect(user).deposit(tokenAddress, amount);
-    expect(await manager.getTotalDeposited(tokenAddress)).to.equal(amount);
+    expect(await manager.getAssetTotalDeposited(tokenAddress)).to.equal(amount);
     await expect(manager.connect(user).withdraw(tokenAddress, amount)).not.to.be.reverted;
   });
 
